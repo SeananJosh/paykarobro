@@ -11,5 +11,6 @@ pandas
 numpy
 python-jose[cryptography]
 passlib[bcrypt]
+bcrypt==3.2.2
 pyotp
 python-multipart
