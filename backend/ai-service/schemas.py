@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import date, datetime
 from decimal import Decimal
@@ -14,8 +14,7 @@ class Business(BusinessBase):
     owner_id: str
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ObligationBase(BaseModel):
     vendor_name: str
@@ -35,8 +34,7 @@ class Obligation(ObligationBase):
     ai_reasoning: Optional[str] = None
     created_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ForecastBase(BaseModel):
     forecast_date: date
@@ -52,8 +50,7 @@ class Forecast(ForecastBase):
     business_id: str
     generated_at: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class Token(BaseModel):
     access_token: str

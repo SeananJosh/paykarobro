@@ -46,11 +46,9 @@ def get_demo_business(db: Session):
     """Return (or lazily create) the demo user + business."""
     user = db.query(models.User).first()
     if not user:
-        # Use passlib's sha256_crypt as fallback — bcrypt has a bug on Python 3.14
-        from passlib.hash import sha256_crypt
         user = models.User(
             email="admin@paykarobro.com",
-            password_hash=sha256_crypt.hash("demo1234")
+            password_hash=security.get_password_hash("demo1234")
         )
         db.add(user)
         db.commit()
