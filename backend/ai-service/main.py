@@ -191,7 +191,9 @@ def execute_payment(
     biz = get_demo_business(db)
     user = biz.owner
 
-    if user.is_2fa_enabled and tfa_token:
+    if user.is_2fa_enabled:
+        if not tfa_token:
+            raise HTTPException(status_code=401, detail="2FA token required")
         if not security.verify_totp(user.totp_secret, tfa_token):
             raise HTTPException(status_code=401, detail="Invalid 2FA token")
 

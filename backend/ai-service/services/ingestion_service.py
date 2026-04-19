@@ -23,13 +23,16 @@ class DataIngestionService:
                 raise ValueError(f"Missing required column: {col}")
                 
         results = []
-        for _, row in df.iterrows():
-            results.append({
-                "vendor_name": str(row['vendor']),
-                "amount": Decimal(str(row['amount'])),
-                "due_date": datetime.strptime(str(row['due_date']), '%Y-%m-%d').date(),
-                "category": str(row.get('category', 'Miscellaneous'))
-            })
+        for index, row in df.iterrows():
+            try:
+                results.append({
+                    "vendor_name": str(row['vendor']),
+                    "amount": Decimal(str(row['amount'])),
+                    "due_date": datetime.strptime(str(row['due_date']), '%Y-%m-%d').date(),
+                    "category": str(row.get('category', 'Miscellaneous'))
+                })
+            except (ValueError, TypeError) as e:
+                raise ValueError(f"Error parsing row {index + 1}: {str(e)}")
         return results
 
     @staticmethod
@@ -40,12 +43,15 @@ class DataIngestionService:
         """
         df = pd.read_csv(StringIO(csv_content))
         results = []
-        for _, row in df.iterrows():
-            results.append({
-                "transaction_date": datetime.strptime(str(row['date']), '%Y-%m-%d').date(),
-                "description": str(row['description']),
-                "amount": Decimal(str(row['amount'])),
-                "balance_after": Decimal(str(row['balance'])),
-                "category": str(row.get('category', 'General'))
-            })
+        for index, row in df.iterrows():
+            try:
+                results.append({
+                    "transaction_date": datetime.strptime(str(row['date']), '%Y-%m-%d').date(),
+                    "description": str(row['description']),
+                    "amount": Decimal(str(row['amount'])),
+                    "balance_after": Decimal(str(row['balance'])),
+                    "category": str(row.get('category', 'General'))
+                })
+            except (ValueError, TypeError, KeyError) as e:
+                raise ValueError(f"Error parsing transaction row {index + 1}: {str(e)}")
         return results

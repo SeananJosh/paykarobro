@@ -17,6 +17,9 @@ class PaymentService:
         ob = db.query(models.Obligation).filter(models.Obligation.id == obligation_id).first()
         if not ob:
             raise Exception("Obligation not found")
+
+        if ob.status == "paid":
+            raise Exception("Obligation is already paid")
             
         # 1. Simulate Gateway Interaction
         gateway_ref = f"PAY-{uuid.uuid4().hex[:8].upper()}"
